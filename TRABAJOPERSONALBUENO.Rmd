@@ -78,3 +78,26 @@ dim(vuelo_salida)
 print("salen entre medianoche y las 7 de la mañana (vuelos nocturnos")
 ```
 
+Ejercicio 8:¿Cuántos vuelos tienen un valor desconocido de dep_time?
+
+```{r}
+vuelo_desc <- vuelos[is.na(vuelos$dep_time),]
+dim(vuelo_desc)
+print("Aparecen 8255 vuelos que tienen valores desconocidos de dep_time")
+```
+
+Ejercicio 9: ¿Qué variables del dataset contienen valores desconocidos? 
+
+```{r}
+
+```
+
+
+Ejercicio 10: Ordena los vuelos de flights para encontrar los vuelos más retrasados en la salida. ¿Qué
+vuelos fueron los que salieron los primeros antes de lo previsto? 
+
+```{r}
+
+```
+
+

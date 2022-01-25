@@ -1,7 +1,5 @@
 install.packages("nycflights13")
 library(nycflights13)
-
-
 lineas <- nycflights13::airlines
 aeropuertos <- nycflights13::airports
 vuelos <- nycflights13::flights
@@ -41,5 +39,11 @@ vuelo_salida <- vuelos[which(vuelos$hour >=0 & vuelos$hour <=7),]
 dim(vuelo_salida)
 print("salen entre medianoche y las 7 de la mañana (vuelos
                                                     nocturnos")
+
+vuelo_desc <- vuelos[is.na(vuelos$dep_time),]
+dim(vuelo_desc)
+
+dato_des <- vuelos[is.na(vuelos$vuelos),]
+
 
 
