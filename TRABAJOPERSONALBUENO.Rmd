@@ -107,23 +107,22 @@ print("En este caso nos da una idea de aquellos vuelos que salieron los primeros
 Ejercicio 11: Ordena los vuelos de flights para encontrar los vuelos más rápidos. Usa el concepto de
 rapidez que consideres.
 ```{r}
-vuelos$tardanza <-(vuelos$arr_delay + vuelos$dep_delay)
-arrange(vuelos, vuelos$tardanza)
+head(arrange(flights, air_time))
 
-print("Mediante la función anterior encontramos aquellos vuelos que fueron más rapidos")
+print("Consideramos los vuelos más rápidos como aquellos que están menos tiempo en el aire, por lo tanto, mediante la función anterior encontramos aquellos vuelos que fueron más rapidos. En este caso serían los dos primeros en la tabla.")
 ```
 
 Ejercicio 12: ¿Qué vuelos tienen los trayectos más largos?
 ```{r}
 arrange(vuelos, desc(distance))
-print("De esta manera ordenamos los vuelos atendiendo a sus distancias de mayor a menor")
+print("Consideramos la distancia para averiguar los trayectos más largos, de esta manera ordenamos los vuelos atendiendo a sus distancias de mayor a menor, en orden descendente")
 ```
 
 
 Ejercicio 13:¿Qué vuelos tienen los trayectos más cortos? 
 ```{r}
 arrange(vuelos, distance)
-print("Y de esta manera aquellos que tienen los trayectos más cortos")
+print("Y de esta manera aquellos que tienen los trayectos más cortos, es decir, los que tienen las distancias más cortas, los ordenamos de manera ascendente")
 
 ```
 Ejercicio 14: El dataset de vuelos tiene dos variables, dep_time y sched_dep_time muy útiles pero
@@ -131,27 +130,32 @@ difíciles de usar por cómo vienen dadas al no ser variables continuas. Fíjate
 pone 559, se refiere a que el vuelo salió a las 5:59... Convierte este dato en otro más útil
 que represente el número de minutos que pasan desde media noche.
 ```{r}
-vuelos$salientes <-(vuelos$dep_time %/% 100 * 60) + (vuelos$dep_time %% 100)
-vuelos$horasalientest <-(vuelos$sched_dep_time %/% 100 * 60) + (vuelos$sched_dep_time %% 100)
-vuelos$salientes
-vuelos$salientes
+dep_time_min <- (vuelos$dep_time %/% 100 * 60) + (vuelos$dep_time %% 100)
+sched_dep_ti_min <- (vuelos$sched_dep_time %/% 100 * 60) + (vuelos$sched_dep_time %% 100)
+
+  
 ```
 Ejercicio 15:  Compara los valores de dep_time, sched_dep_time y dep_delay. ¿Cómo deberían
 relacionarse estos tres números? Compruébalo y haz las correcciones numéricas que
 necesitas.
 ```{r}
-print("Estas tres variables están relacionadas entre sí. Observamos como la hora de salida real es igual a la hora de salida estimada mas el retraso que se produce en la salida del avión")
+dep_delay_difference <- vuelos$dep_delay - dep_time_min + sched_dep_ti_min
+dep_delay_difference
+flights_times <- mutate(flights, dep_time_min, sched_dep_ti_min, dep_delay_difference)
+flights_times
+print("Estas tres variables están relacionadas entre sí. Observamos como la hora de salida real es igual a la hora de salida estimada mas el retraso que se produce en la salida del avión.Las discrepancias podrían deberse a que un vuelo estaba programado para salir antes de medianoche, pero se retrasó después de medianoche. Todas estas discrepancias son exactamente iguales a 1440 (24 horas), y los vuelos con estas discrepancias estaban programados para salir más tarde en el día.")
 ```
 
 Ejercicio 16: Investiga si existe algún patrón del número de vuelos que se cancelan cada día. 
 ```{r}
 vueloscancelados <-  vuelos %>%
-  mutate(cancelado = (is.na(tailnum))) %>%
+  mutate(cancelado = (is.na(arr_delay) | is.na(arr_delay))) %>%
   group_by(year, month, day) %>%
   summarise(num_cancelado = sum(cancelado), num_vuelo = n(),)
 
 ggplot(vueloscancelados) +
   geom_line(aes(x = num_vuelo, y = num_cancelado, col=num_vuelo,)) 
+print("Observamos en la gráfico que el número de vuelos cancelados aumenta con el número total de vuelos")
 
 ```
 
@@ -169,7 +173,7 @@ proptardanz_cancel <-
 proptardanz_cancel
 ggplot(proptardanz_cancel) +
   geom_line(aes(x = med_dep_delay, y = prop_cancelados, col=prop_cancelados))
-
+print("Exiate una relación entre los vuelos cancelados y el retraso promedio por día en estos")
 ```
 
 
@@ -186,6 +190,7 @@ proptard_canc_aeropuerto <-
 
 ggplot(proptard_canc_aeropuerto) +
   geom_line(aes(x = med_dep_delay, y = prop_cancelados, col= prop_cancelados))
+print("No aparece una relación significativa entre la proporción de vuelos cancelados con el retraso promedio por aeropuerto en los vuelos")
 ```
 
 
@@ -214,8 +219,10 @@ vuelos %>%
   arrange(dep_delay)
 print("Esta serían las mejores horas para coger un avión si lo que queremos es evitar los retrasos")
 ```
+
 Ejercicio 21: Queremos saber qué día de la semana nos conviene volar si queremos evitar los retrasos
 en la salida. 
+
 ```{r}
 make_dtime <- function(year, month, day, time) {
   make_datetime(year, month, day, time %/% 100, time %% 100)
