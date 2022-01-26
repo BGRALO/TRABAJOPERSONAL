@@ -291,10 +291,10 @@ vuelos_dt %>%
   ggplot(aes(y = dep_delay, x = sched_dep_hour)) +
   geom_point() +
   geom_smooth()
-print("Podemos observar claramente como los retrasos a lor largo del dia son mayores, podría ser debido al mayor cúmulo de gente que viaja durante el día. Podemos observar que los viajes nocturnos y de madrugada acumulan menor número de atrasos")
+print("Podemos observar claramente como los retrasos a lor largo del dia son mayores, podría ser debido al mayor acúmulo de gente que viaja durante el día. Podemos observar que los viajes nocturnos y de madrugada acumulan menor número de retrasos")
 ```
 
-Ejercicio 25: Subir la carpeta a github y facilitar la url.
+Ejercicio 25: Subir la carpeta a github y facilitar la url:
 ```{r}
 
 ```
